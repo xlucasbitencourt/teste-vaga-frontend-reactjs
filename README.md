@@ -7,9 +7,7 @@ Bem-vindo ao teste prático para a vaga de Desenvolvedor Frontend ReactJS. O obj
 ## Requisitos
 
 - ReactJS
-- Redux (e Redux Toolkit)
-- CSS/Styled Components
-- Hooks do React (useState, useEffect, useSelector, useDispatch)
+- 2 Testes Unitários
 - Simulação de uma API utilizando um array de JSON
 - Estruturação de componentes em React
 
@@ -47,7 +45,6 @@ Você deve simular uma API utilizando um array de objetos JSON para armazenar os
 ## Critérios de Avaliação
 
 - Estrutura e organização do código.
-- Utilização correta do Redux para gerenciamento de estado.
 - Implementação das funcionalidades solicitadas.
 - Qualidade da interface do usuário.
 - Responsividade da aplicação.
