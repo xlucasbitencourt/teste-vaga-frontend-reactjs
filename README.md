@@ -53,6 +53,6 @@ Você deve simular uma API utilizando um array de objetos JSON para armazenar os
 
 ## Entrega
 
-Para enviar sua solução, faça um fork deste repositório, implemente o projeto e envie o link do seu repositório através do nosso portal de carreiras.
+Para enviar sua solução, faça um fork deste repositório, implemente o projeto e envie o link do seu repositório via email para `gustavode.s.fonseca@gmail.com` .
 
 Boa sorte!
