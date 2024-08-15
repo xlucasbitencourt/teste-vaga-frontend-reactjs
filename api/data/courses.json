@@ -57,25 +57,5 @@
         ]
       }
     ]
-  },
-  {
-    "id": "1723678649017",
-    "title": "teste2",
-    "description": "descrição",
-    "modules": [
-      {
-        "id": "17236786490179abxnfm6yx4",
-        "title": "titulo 1",
-        "description": "dsdsd",
-        "lessons": [
-          {
-            "id": "1723678649017einnp2fmvca",
-            "title": "titufi",
-            "description": "lalalal",
-            "content": "conteúdo"
-          }
-        ]
-      }
-    ]
   }
 ]
