@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} flex flex-col justify-center items-center w-full sm:w-[80%] lg:w-[70%] m-auto`}
+        className={`${inter.className} flex flex-col gap-4 justify-center items-center w-full sm:w-[80%] lg:w-[70%] mx-auto my-4`}
       >
         {children}
       </body>
