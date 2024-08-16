@@ -7,7 +7,7 @@ import { H2 } from "@/components/ui/h2";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Module, Lesson } from "@/types";
-import { getCourse, updateCourse } from "@/api/courses";
+import { getCourse, updateCourse, deleteCourse } from "@/api/courses";
 import { useRouter } from "next/navigation";
 
 type Props = {
@@ -78,10 +78,7 @@ export default function EditCoursePage({ params: { courseId } }: Props) {
   };
 
   const handleAddModule = () => {
-    setModules([
-      ...modules,
-      { id: Date.now(), title: "", description: "", lessons: [] },
-    ]);
+    setModules([...modules, { id: Date.now(), title: "", description: "", lessons: [] }]);
   };
 
   const handleRemoveModule = (moduleIndex: number) => {
@@ -90,11 +87,7 @@ export default function EditCoursePage({ params: { courseId } }: Props) {
     setModules(updatedModules);
   };
 
-  const handleModuleChange = (
-    index: number,
-    field: keyof Module,
-    value: string
-  ) => {
+  const handleModuleChange = (index: number, field: keyof Module, value: string) => {
     const updatedModules = [...modules];
     (updatedModules[index][field] as string) = value;
     setModules(updatedModules);
@@ -143,17 +136,21 @@ export default function EditCoursePage({ params: { courseId } }: Props) {
     router.push("/courses");
   };
 
+  const handleDelete = async () => {
+    if (confirm("Tem certeza que deseja excluir este curso?")) {
+      await deleteCourse(courseId);
+      router.push("/courses");
+    }
+  };
+
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 w-3/4">
       <Button onClick={() => router.push("/courses")}>Voltar</Button>
       <H1>Editar Curso</H1>
       {errorMessage && <div className="text-red-500">{errorMessage}</div>}
       <div className="flex flex-col gap-2">
         <label>Título do Curso</label>
-        <Input
-          value={courseTitle}
-          onChange={(e) => setCourseTitle(e.target.value)}
-        />
+        <Input value={courseTitle} onChange={(e) => setCourseTitle(e.target.value)} />
       </div>
       <div className="flex flex-col gap-2">
         <label>Descrição do Curso</label>
@@ -170,9 +167,7 @@ export default function EditCoursePage({ params: { courseId } }: Props) {
             <label>Título do Módulo</label>
             <Input
               value={module.title}
-              onChange={(e) =>
-                handleModuleChange(moduleIndex, "title", e.target.value)
-              }
+              onChange={(e) => handleModuleChange(moduleIndex, "title", e.target.value)}
             />
           </div>
           <div className="flex flex-col gap-2">
@@ -184,9 +179,7 @@ export default function EditCoursePage({ params: { courseId } }: Props) {
               }
             />
           </div>
-          <Button onClick={() => handleAddLesson(moduleIndex)}>
-            Adicionar Lição
-          </Button>
+          <Button onClick={() => handleAddLesson(moduleIndex)}>Adicionar Lição</Button>
           {module.lessons.map((lesson, lessonIndex) => (
             <div key={lesson.id} className="flex flex-col gap-2 mt-2">
               <H2>Lição {lessonIndex + 1}</H2>
@@ -195,12 +188,7 @@ export default function EditCoursePage({ params: { courseId } }: Props) {
                 <Input
                   value={lesson.title}
                   onChange={(e) =>
-                    handleLessonChange(
-                      moduleIndex,
-                      lessonIndex,
-                      "title",
-                      e.target.value
-                    )
+                    handleLessonChange(moduleIndex, lessonIndex, "title", e.target.value)
                   }
                 />
               </div>
@@ -240,17 +228,17 @@ export default function EditCoursePage({ params: { courseId } }: Props) {
               </Button>
             </div>
           ))}
-          <Button
-            variant="destructive"
-            onClick={() => handleRemoveModule(moduleIndex)}
-          >
+          <Button variant="destructive" onClick={() => handleRemoveModule(moduleIndex)}>
             Remover Módulo
           </Button>
         </div>
       ))}
       <Button onClick={handleAddModule}>Adicionar Módulo</Button>
-      <Button onClick={handleSubmit} className="mt-4">
+      <Button variant="success" onClick={handleSubmit} className="mt-4">
         Salvar Curso
+      </Button>
+      <Button variant="destructive" onClick={handleDelete}>
+        Excluir Curso
       </Button>
     </div>
   );

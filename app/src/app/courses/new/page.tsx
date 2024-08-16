@@ -185,7 +185,7 @@ export default function Page() {
         </div>
       ))}
       <Button onClick={handleAddModule}>Adicionar Módulo</Button>
-      <Button onClick={handleSubmit} className="mt-4">
+      <Button variant="success" onClick={handleSubmit} className="mt-4">
         Salvar Curso
       </Button>
     </div>

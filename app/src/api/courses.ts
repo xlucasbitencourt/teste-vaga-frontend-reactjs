@@ -20,3 +20,7 @@ export const updateCourse = async (id: string, course: Course): Promise<Course> 
   const response = await api.put(`/courses/${id}`, course);
   return response.data;
 };
+
+export const deleteCourse = async (id: string): Promise<void> => {
+  await api.delete(`/courses/${id}`);
+};
