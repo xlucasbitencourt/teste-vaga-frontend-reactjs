@@ -6,9 +6,15 @@ import { H1 } from "@/components/ui/h1";
 import { H2 } from "@/components/ui/h2";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Lesson, Module } from "@/types";
+import { Module } from "@/types";
 import { createCourse } from "@/api/courses";
 import { useRouter } from "next/navigation";
+import {
+  validateCourse,
+  handleModuleChange,
+  handleAddLesson,
+  handleLessonChange,
+} from "@/lib/formHandles";
 
 export default function Page() {
   const [courseTitle, setCourseTitle] = useState("");
@@ -22,74 +28,8 @@ export default function Page() {
     setModules([...modules, { id: Date.now(), title: "", description: "", lessons: [] }]);
   };
 
-  const handleModuleChange = (index: number, field: keyof Module, value: string) => {
-    const updatedModules: Module[] = [...modules];
-    (updatedModules[index][field] as string) = value;
-    setModules(updatedModules);
-  };
-
-  const handleAddLesson = (moduleIndex: number) => {
-    const updatedModules = [...modules];
-    updatedModules[moduleIndex].lessons.push({
-      id: Date.now(),
-      title: "",
-      description: "",
-      content: "",
-    });
-    setModules(updatedModules);
-  };
-
-  const handleLessonChange = (
-    moduleIndex: number,
-    lessonIndex: number,
-    field: keyof Lesson,
-    value: string
-  ) => {
-    const updatedModules: Module[] = [...modules];
-    (updatedModules[moduleIndex].lessons[lessonIndex][field] as string) = value;
-    setModules(updatedModules);
-  };
-
-  const validateCourse = () => {
-    if (!courseTitle.trim() || !courseDescription.trim()) {
-      setErrorMessage("O título e a descrição do curso são obrigatórios.");
-      return false;
-    }
-
-    if (modules.length === 0) {
-      setErrorMessage("O curso deve ter pelo menos um módulo.");
-      return false;
-    }
-
-    for (const moduleItem of modules) {
-      if (!moduleItem.title.trim() || !moduleItem.description.trim()) {
-        setErrorMessage("Todos os módulos devem ter título e descrição.");
-        return false;
-      }
-
-      if (moduleItem.lessons.length === 0) {
-        setErrorMessage("Cada módulo deve ter pelo menos uma lição.");
-        return false;
-      }
-
-      for (const lesson of moduleItem.lessons) {
-        if (
-          !lesson.title.trim() ||
-          !lesson.description.trim() ||
-          !lesson.content.trim()
-        ) {
-          setErrorMessage("Todas as lições devem ter título, descrição e conteúdo.");
-          return false;
-        }
-      }
-    }
-
-    setErrorMessage(null);
-    return true;
-  };
-
   const handleSubmit = async () => {
-    if (!validateCourse()) {
+    if (!validateCourse(courseTitle, courseDescription, modules, setErrorMessage)) {
       return;
     }
 
@@ -105,9 +45,7 @@ export default function Page() {
 
   return (
     <div className="flex flex-col gap-4">
-      <Button onClick={() => router.push("/courses")}>Voltar</Button>
       <H1>Adicionar Novo Curso</H1>
-      {errorMessage && <div className="text-red-500">{errorMessage}</div>}
       <div className="flex flex-col gap-2">
         <label>Título do Curso</label>
         <Input value={courseTitle} onChange={(e) => setCourseTitle(e.target.value)} />
@@ -120,27 +58,43 @@ export default function Page() {
         />
       </div>
       <H2>Módulos</H2>
-      {modules.map((moduleItem, moduleIndex) => (
-        <div key={moduleItem.id} className="flex flex-col gap-4 mb-4">
+      {modules.map((module, moduleIndex) => (
+        <div key={module.id} className="flex flex-col gap-4 mb-4">
           <H2>Módulo {moduleIndex + 1}</H2>
           <div className="flex flex-col gap-2">
             <label>Título do Módulo</label>
             <Input
-              value={moduleItem.title}
-              onChange={(e) => handleModuleChange(moduleIndex, "title", e.target.value)}
+              value={module.title}
+              onChange={(e) =>
+                handleModuleChange(
+                  modules,
+                  setModules,
+                  moduleIndex,
+                  "title",
+                  e.target.value
+                )
+              }
             />
           </div>
           <div className="flex flex-col gap-2">
             <label>Descrição do Módulo</label>
             <Textarea
-              value={moduleItem.description}
+              value={module.description}
               onChange={(e) =>
-                handleModuleChange(moduleIndex, "description", e.target.value)
+                handleModuleChange(
+                  modules,
+                  setModules,
+                  moduleIndex,
+                  "description",
+                  e.target.value
+                )
               }
             />
           </div>
-          <Button onClick={() => handleAddLesson(moduleIndex)}>Adicionar Lição</Button>
-          {moduleItem.lessons.map((lesson, lessonIndex) => (
+          <Button onClick={() => handleAddLesson(modules, setModules, moduleIndex)}>
+            Adicionar Lição
+          </Button>
+          {module.lessons.map((lesson, lessonIndex) => (
             <div key={lesson.id} className="flex flex-col gap-2 mt-2">
               <H2>Lição {lessonIndex + 1}</H2>
               <div className="flex flex-col gap-2">
@@ -148,7 +102,14 @@ export default function Page() {
                 <Input
                   value={lesson.title}
                   onChange={(e) =>
-                    handleLessonChange(moduleIndex, lessonIndex, "title", e.target.value)
+                    handleLessonChange(
+                      modules,
+                      setModules,
+                      moduleIndex,
+                      lessonIndex,
+                      "title",
+                      e.target.value
+                    )
                   }
                 />
               </div>
@@ -158,6 +119,8 @@ export default function Page() {
                   value={lesson.description}
                   onChange={(e) =>
                     handleLessonChange(
+                      modules,
+                      setModules,
                       moduleIndex,
                       lessonIndex,
                       "description",
@@ -172,6 +135,8 @@ export default function Page() {
                   value={lesson.content}
                   onChange={(e) =>
                     handleLessonChange(
+                      modules,
+                      setModules,
                       moduleIndex,
                       lessonIndex,
                       "content",
@@ -188,6 +153,7 @@ export default function Page() {
       <Button variant="success" onClick={handleSubmit} className="mt-4">
         Salvar Curso
       </Button>
+      {errorMessage && <div className="text-red-500">{errorMessage}</div>}
     </div>
   );
 }
