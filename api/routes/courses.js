@@ -22,6 +22,18 @@ router.get('/', (req, res) => {
   res.json(courses);
 });
 
+// Get a course by ID
+router.get('/:id', (req, res) => {
+  const courses = readData();
+  const course = courses.find((c) => c.id == req.params.id);
+
+  if (course) {
+    res.json(course);
+  } else {
+    res.status(404).json({ message: 'Course not found' });
+  }
+});
+
 // Add a new course
 // Add a new course with modules and lessons
 router.post('/', (req, res) => {
@@ -57,7 +69,7 @@ router.post('/', (req, res) => {
 router.put('/:id', (req, res) => {
   const courses = readData();
   const courseId = req.params.id;
-  const courseIndex = courses.findIndex((c) => c.id === courseId);
+  const courseIndex = courses.findIndex((c) => c.id == courseId);
 
   if (courseIndex !== -1) {
     courses[courseIndex] = { ...courses[courseIndex], ...req.body };
@@ -87,7 +99,7 @@ router.delete('/:id', (req, res) => {
 router.post('/:courseId/modules', (req, res) => {
   const courses = readData();
   const courseId = req.params.courseId;
-  const course = courses.find(c => c.id === courseId);
+  const course = courses.find(c => c.id == courseId);
 
   if (course) {
     const newModule = {
@@ -110,9 +122,9 @@ router.put('/:courseId/modules/:moduleId', (req, res) => {
   const courseId = req.params.courseId;
   const moduleId = req.params.moduleId;
 
-  const course = courses.find(c => c.id === courseId);
+  const course = courses.find(c => c.id == courseId);
   if (course) {
-    const module = course.modules.find(m => m.id === moduleId);
+    const module = course.modules.find(m => m.id == moduleId);
     if (module) {
       Object.assign(module, req.body);
       writeData(courses);
@@ -131,7 +143,7 @@ router.delete('/:courseId/modules/:moduleId', (req, res) => {
   const courseId = req.params.courseId;
   const moduleId = req.params.moduleId;
 
-  const course = courses.find(c => c.id === courseId);
+  const course = courses.find(c => c.id == courseId);
   if (course) {
     const newModules = course.modules.filter(m => m.id !== moduleId);
     if (newModules.length !== course.modules.length) {
@@ -152,9 +164,9 @@ router.post('/:courseId/modules/:moduleId/lessons', (req, res) => {
   const courseId = req.params.courseId;
   const moduleId = req.params.moduleId;
 
-  const course = courses.find(c => c.id === courseId);
+  const course = courses.find(c => c.id == courseId);
   if (course) {
-    const module = course.modules.find(m => m.id === moduleId);
+    const module = course.modules.find(m => m.id == moduleId);
     if (module) {
       const newLesson = {
         id: Date.now().toString(),
@@ -180,11 +192,11 @@ router.put('/:courseId/modules/:moduleId/lessons/:lessonId', (req, res) => {
   const moduleId = req.params.moduleId;
   const lessonId = req.params.lessonId;
 
-  const course = courses.find(c => c.id === courseId);
+  const course = courses.find(c => c.id == courseId);
   if (course) {
-    const module = course.modules.find(m => m.id === moduleId);
+    const module = course.modules.find(m => m.id == moduleId);
     if (module) {
-      const lesson = module.lessons.find(l => l.id === lessonId);
+      const lesson = module.lessons.find(l => l.id == lessonId);
       if (lesson) {
         Object.assign(lesson, req.body);
         writeData(courses);
@@ -207,9 +219,9 @@ router.delete('/:courseId/modules/:moduleId/lessons/:lessonId', (req, res) => {
   const moduleId = req.params.moduleId;
   const lessonId = req.params.lessonId;
 
-  const course = courses.find(c => c.id === courseId);
+  const course = courses.find(c => c.id == courseId);
   if (course) {
-    const module = course.modules.find(m => m.id === moduleId);
+    const module = course.modules.find(m => m.id == moduleId);
     if (module) {
       const newLessons = module.lessons.filter(l => l.id !== lessonId);
       if (newLessons.length !== module.lessons.length) {

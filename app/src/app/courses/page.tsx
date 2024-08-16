@@ -15,10 +15,13 @@ import {
 import { Course } from "@/types";
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
+import { useRouter } from 'next/navigation'
 
 export default function Page() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const router = useRouter()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,7 +55,7 @@ export default function Page() {
           <TableBody>
             {courses.length > 0 ? (
               courses.map((course) => (
-                <TableRow key={course.id} className="cursor-pointer">
+                <TableRow onClick={() => router.push(`/courses/${course.id}`)} key={course.id} className="cursor-pointer">
                   <TableCell className="font-medium">{course.title}</TableCell>
                   <TableCell>{course.description}</TableCell>
                   <TableCell>{course.modules.length}</TableCell>
