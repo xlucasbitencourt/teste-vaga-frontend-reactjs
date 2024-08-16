@@ -43,6 +43,8 @@ export default function Page({ params: { courseId } }: Props) {
 
   return (
     <div className="flex flex-col gap-4">
+      <Button onClick={() => router.push("/courses")}>Voltar</Button>
+      <Button onClick={() => router.push(`/courses/${courseId}/edit`)}>Editar</Button>
       <H1>{course?.title}</H1>
       <H3>{course?.description}</H3>
       <H2>Módulos</H2>

@@ -15,3 +15,8 @@ export const createCourse = async (course: Course): Promise<Course> => {
   const response = await api.post("/courses", course);
   return response.data;
 };
+
+export const updateCourse = async (id: string, course: Course): Promise<Course> => {
+  const response = await api.put(`/courses/${id}`, course);
+  return response.data;
+};
