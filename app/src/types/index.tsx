@@ -1,8 +1,14 @@
 export interface Course {
-    id: number;
+    id?: number;
     title: string;
     description: string;
     modules: Module[];
+}
+
+export interface ModuleRequest {
+    title: string;
+    description: string;
+    lessons: Lesson[];
 }
 
 export interface Module {

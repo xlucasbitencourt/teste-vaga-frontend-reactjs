@@ -15,13 +15,13 @@ import {
 import { Course } from "@/types";
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,7 +39,7 @@ export default function Page() {
       <H1>Cursos</H1>
       <div className="flex justify-between self-stretch">
         <H3>Clique em um curso para mais detalhes</H3>
-        <Button>Novo curso</Button>
+        <Button onClick={() => router.push("/courses/new")}>Novo curso</Button>
       </div>
       {loading ? (
         <Loader2 className="h-20 w-20 animate-spin" />
@@ -55,7 +55,11 @@ export default function Page() {
           <TableBody>
             {courses.length > 0 ? (
               courses.map((course) => (
-                <TableRow onClick={() => router.push(`/courses/${course.id}`)} key={course.id} className="cursor-pointer">
+                <TableRow
+                  onClick={() => router.push(`/courses/${course.id}`)}
+                  key={course.id}
+                  className="cursor-pointer"
+                >
                   <TableCell className="font-medium">{course.title}</TableCell>
                   <TableCell>{course.description}</TableCell>
                   <TableCell>{course.modules.length}</TableCell>
