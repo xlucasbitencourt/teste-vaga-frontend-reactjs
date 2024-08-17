@@ -56,3 +56,32 @@ Você deve simular uma API utilizando um array de objetos JSON para armazenar os
 Para enviar sua solução, faça um fork deste repositório, implemente o projeto e envie o link do seu repositório via email para `gustavode.s.fonseca@gmail.com` .
 
 Boa sorte!
+
+## Rodando a aplicação
+
+Para rodar a aplicação, execute os seguintes comandos:
+
+Primeiro, inicialize a api:
+
+```bash
+cd api
+npm install
+npm run dev
+```
+
+Em outro terminal, inicialize a aplicação:
+
+```bash
+cd app
+npm install
+npm run dev
+```
+
+Acesse a aplicação em `http://localhost:3000` e a api em `http://localhost:3001`.
+
+Para rodar os testes unitários, execute:
+
+```bash
+cd app
+npm run test
+```
