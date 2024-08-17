@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getCourse, updateCourse, deleteCourse } from "@/api/courses";
 import CourseForm from "@/components/CourseForm";
+import Modal from "@/components/ui/Modal";
 import { Module } from "@/types";
 
 type Props = {
@@ -12,11 +13,13 @@ type Props = {
   };
 };
 
-export default function Page({ params: { courseId } }: Props) {
+export default function EditCoursePage({ params: { courseId } }: Props) {
   const [courseTitle, setCourseTitle] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
   const [modules, setModules] = useState<Module[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   const router = useRouter();
 
@@ -35,27 +38,54 @@ export default function Page({ params: { courseId } }: Props) {
     fetchCourse();
   }, [courseId]);
 
-  const handleUpdateCourse = async (title: string, description: string, modules: Module[]) => {
+  const handleUpdateCourse = async (
+    title: string,
+    description: string,
+    modules: Module[]
+  ) => {
     await updateCourse(courseId, { title, description, modules });
     router.push("/courses");
   };
 
   const handleDeleteCourse = async () => {
-    if (confirm("Tem certeza que deseja excluir este curso?")) {
-      await deleteCourse(courseId);
-      router.push("/courses");
-    }
+    setIsModalOpen(true);
+  };
+
+  const confirmDeleteCourse = async () => {
+    await deleteCourse(courseId);
+    setIsConfirmModalOpen(true);
   };
 
   return (
-    <CourseForm
-      initialTitle={courseTitle}
-      initialDescription={courseDescription}
-      initialModules={modules}
-      onSubmit={handleUpdateCourse}
-      onDelete={handleDeleteCourse}
-      errorMessage={errorMessage}
-      setErrorMessage={setErrorMessage}
-    />
+    <>
+      <CourseForm
+        initialTitle={courseTitle}
+        initialDescription={courseDescription}
+        initialModules={modules}
+        onSubmit={handleUpdateCourse}
+        onDelete={handleDeleteCourse}
+        errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage}
+      />
+      <Modal
+        title="Confirmar Exclusão"
+        message="Tem certeza que deseja excluir este curso? Esta ação não pode ser desfeita."
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={confirmDeleteCourse}
+        confirmButtonText="Excluir"
+        cancelButtonText="Cancelar"
+      />
+      <Modal
+        title="Curso Excluído"
+        isOpen={isConfirmModalOpen}
+        onClose={() => {
+          setIsConfirmModalOpen(false);
+          router.push("/courses");
+        }}
+        confirmButtonText="Fechar"
+        onlyClose
+      />
+    </>
   );
 }
