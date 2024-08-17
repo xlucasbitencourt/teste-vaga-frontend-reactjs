@@ -25,8 +25,11 @@ export default function Modal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-md shadow-md">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
+    >
+      <div className="bg-white min-w-96 p-6 rounded-md shadow-md">
         <h2 className="text-xl font-semibold mb-4">{title}</h2>
         {message && <p className="mb-6">{message}</p>}
         <div className="flex justify-end gap-4">

@@ -85,7 +85,7 @@ router.put('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
   const courses = readData();
   const courseId = req.params.id;
-  const newCourses = courses.filter((c) => c.id !== Number(courseId));
+  const newCourses = courses.filter((c) => Number(c.id) !== Number(courseId));
 
   if (newCourses.length !== courses.length) {
     writeData(newCourses);
